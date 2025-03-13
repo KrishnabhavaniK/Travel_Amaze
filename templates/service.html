@@ -1,0 +1,241 @@
+{% load static %}
+{% static "images" as baseUrl %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services - Travel_Amaze</title>
+
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .redirect-btn {
+            display: inline-block;
+            background-color:  #ff6b6b;
+            color: white;
+            text-decoration: none;
+            /* Removes underline */
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            text-align: center;
+            transition: background 0.3s;
+        }
+
+        .redirect-btn:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="site-header" style="background: rgba(0, 0, 0, 0.7) !important; padding: 20px 0;">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg">
+                <a class="navbar-brand" href="#">
+                    <img src="{% static 'images/logo.png' %}" alt="Travel_Amaze" class="logo-icon">
+                    Travel_Amaze
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link " href="{% url 'index' %}">HOME</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">ABOUT</a></li>
+                        <li class="nav-item"><a class="nav-link  active" href="{% url 'service' %}">SERVICES</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">CONTACT</a></li>
+                        <!--<li class="nav-item">
+                            <a class="nav-link register-btn" href="registration.html">REGISTER</a>
+                        </li>-->
+                    </ul>
+                    {% if user.is_authenticated %}
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <a href="{% url 'logout' %}" class="redirect-btn">Logout</a>
+                        <a href="{% url 'profile' %}" style="text-decoration: none;">
+                            <div style="width: 35px; height: 35px; border-radius: 50%; 
+                        background-color: #3498db; color: white; 
+                        display: flex; justify-content: center; align-items: center;
+                        font-weight: bold; font-size: 18px;">
+                                {{ user.username|first|upper }}
+                            </div>
+                        </a>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="redirect-btn">Login</a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Title -->
+    <section class="page-title" style="background-image: url('{{baseUrl}}/service.jpg');">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h2 class="mb-2">Our Services</h2>
+                    <p class="breadcrumbs">
+                        <span class="mr-2"><a href="{% url 'index' %}">Home</a></span>
+                        <span>Services</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-tours py-5">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <span class="subheading">Incredible India</span>
+                <h2 class="mb-2">Popular Indian Destinations</h2>
+                <p>Discover the magic and diversity of India's most beloved places</p>
+            </div>
+            <div class="row g-4">
+                {% for destination in destinations %}
+                <div class="col-md-4">
+                    <div class="destination-card">
+                        <div class="destination-img">
+                            <img src="{% static destination.image_url %}" alt="{{ destination.name }}">
+                        </div>
+                        <div class="destination-content">
+                            <h3>{{ destination.name }}</h3>
+                            <div class="rating mb-3">
+                                {% for _ in ''|rjust:destination.rating %}
+                                <i class="fas fa-star"></i>
+                                {% endfor %}
+
+                                <span>{{ destination.rating }} Rating</span>
+                            </div>
+                            <p class="description">{{ destination.description }}</p>
+                            <div class="tour-meta">
+                                <p><i class="fas fa-map-marker-alt"></i> {{ destination.location }}</p>
+                            </div>
+
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'destination_detail' destination.slug %}" class="redirect-btn"
+                                onclick="saveAndRedirect(event, '{{ destination.name }}', '{{ destination.slug }}', '{% url 'save_destination' %}', this.href)">
+                                Discover
+                            </a>
+                            {% else %}
+                            <a href="{% url 'login' %}" class="redirect-btn">Discover</a>
+                            {% endif %}
+
+                            <!--<a href="{% url 'destination_detail' destination.slug %}"
+                                class="btn btn-discover">Discover</a>-->
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Pop-up Alert if Destination is Not Found -->
+    {% if not_found %}
+    <script>
+        alert("No package available for the searched destination.");
+    </script>
+    {% endif %}
+    <div id="destination-container">
+        {% for destination in destinations %}
+        <div id="destination-{{ forloop.counter }}" data-name="{{ destination.name|lower }}">
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-bottom text-center mt-4">
+            <p>&copy; 2024 Travel_Amaze. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{% static 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js' %}"></script>
+    <script
+        src="{% static 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js' %}"></script>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get all destination divs
+            let destinations = document.querySelectorAll("#destination-container div");
+
+            // Get search query from Django template
+            let searchQuery = "{{ search_query|escapejs }}".toLowerCase().trim();
+
+            let firstMatch = null;
+
+            destinations.forEach(dest => {
+                let destinationName = dest.dataset.name.trim(); // Get data-name attribute (lowercase)
+
+                if (searchQuery && destinationName.includes(searchQuery)) {
+                    dest.classList.add("highlight"); // Highlight match
+
+                    if (!firstMatch) {
+                        firstMatch = dest; // Store first match
+                    }
+                }
+            });
+
+            // Scroll to first highlighted match
+            if (firstMatch) {
+                firstMatch.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        });
+    </script>
+
+
+    <script>
+        function saveAndRedirect(event, destinationName, destinationSlug, saveUrl, redirectUrl) {
+            event.preventDefault();  // Stop default behavior
+
+            console.log("🔹 Clicked Discover!");  // Debugging
+            console.log("🔹 Sending Destination Name:", destinationName);
+            console.log("🔹 Sending Destination Slug:", destinationSlug);
+
+            if (!destinationName || !destinationSlug) {
+                console.error("❌ Missing destination data!");
+                return;
+            }
+
+            fetch(saveUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({
+                    "destination_name": destinationName,
+                    "destination_url": `/destination/${destinationSlug}/`
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("✅ Server Response:", data);
+                    if (data.message) {
+                        window.location.href = redirectUrl;  // Redirect after saving
+                    } else {
+                        console.error("❌ Error saving destination:", data.error);
+                    }
+                })
+                .catch(error => console.error("❌ Fetch error:", error));
+        }
+    </script>
+
+
+
+
+</body>
+
+</html>

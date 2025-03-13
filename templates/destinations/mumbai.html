@@ -1,0 +1,1268 @@
+{% load static %}
+{% static "images" as baseUrl %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mumbai Gateway - Travel_Amaze</title>
+
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style1.css' %}">
+
+    <style>
+        .redirect-btn {
+            display: inline-block;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            /* Removes underline */
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            text-align: center;
+            transition: background 0.3s;
+        }
+
+        .redirect-btn:hover {
+            background-color: darkred;
+        }
+
+        input[type="date"] {
+            appearance: auto;
+            display: block;
+        }
+
+        /* Booking Categories Styles */
+        .package-card {
+            background: white !important;
+            border-radius: 15px !important;
+            padding: 30px !important;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+            transition: all 0.3s ease !important;
+            height: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        .package-card:hover {
+            transform: translateY(-10px) !important;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .package-header {
+            text-align: center !important;
+            margin-bottom: 25px !important;
+            padding-bottom: 20px !important;
+            border-bottom: 1px solid #eee !important;
+        }
+
+        .package-header h3 {
+            font-size: 24px !important;
+            font-weight: 600 !important;
+            margin-bottom: 10px !important;
+        }
+
+        .transport-type {
+            color: #666 !important;
+            font-size: 16px !important;
+        }
+
+        .transport-type i {
+            margin-right: 5px !important;
+        }
+
+        .package-features {
+            flex-grow: 1 !important;
+        }
+
+        .package-features ul {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 0 1 !important;
+        }
+
+        .package-features li {
+            margin-bottom: 15px !important;
+            color: #666 !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+
+        .package-features i {
+            color: #28a745 !important;
+            margin-right: 10px !important;
+        }
+
+        .package-price {
+            text-align: center !important;
+            margin: 25px 0 !important;
+        }
+
+        .package-price h4 {
+            font-size: 32px !important;
+            color: #ff6b6b !important;
+            margin-bottom: 5px !important;
+        }
+
+        .package-price span {
+            color: #666 !important;
+            font-size: 14px !important;
+        }
+
+        /* Package-specific styles */
+        .package-card.premium {
+            border-top: 5px solid #ff6b6b !important;
+        }
+
+        .package-card.gold {
+            border-top: 5px solid #ffd700 !important;
+        }
+
+        .package-card.silver {
+            border-top: 5px solid #c0c0c0 !important;
+        }
+
+        .btn-book {
+            background-color: #ff6f6f;
+            /* Soft red color */
+            color: white;
+            /* White text */
+            font-weight: bold;
+            /* Bold text */
+            font-size: 16px;
+            /* Adjust font size */
+            border: none;
+            /* Remove border */
+            border-radius: 8px;
+            /* Rounded corners */
+            padding: 12px 20px;
+            /* Adjust padding */
+            width: 100%;
+            /* Full width */
+            text-align: center;
+            /* Center text */
+            cursor: pointer;
+            /* Pointer cursor */
+            transition: background 0.3s ease;
+        }
+
+        .btn-book:hover {
+            background-color: #ff5a5a;
+            /* Slightly darker red on hover */
+        }
+
+        /* Booking Details Page Styles */
+        .booking-details {
+            background: #f8f9fa;
+        }
+
+        .booking-form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .booking-form-container h2 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .selected-package {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .selected-package h3 {
+            color: #ff6b6b;
+            margin-bottom: 15px;
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .features-list li {
+            margin-bottom: 10px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .features-list li i {
+            color: #28a745;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="site-header" style="background: rgba(0, 0, 0, 0.7) !important; padding: 20px 0;">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg">
+                <a class="navbar-brand" href="{% url 'index' %}">
+                    <img src="{% static 'images/logo.png' %}" alt="Travel_Amaze" class="logo-icon">
+                    Travel_Amaze
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="{% url 'index' %}">HOME</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">ABOUT</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="{% url 'service' %}">SERVICES</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">CONTACT</a></li>
+                    </ul>
+                    {% if user.is_authenticated %}
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <a href="{% url 'logout' %}" class="redirect-btn">Logout</a>
+                        <a href="{% url 'profile' %}" style="text-decoration: none;">
+                            <div style="width: 35px; height: 35px; border-radius: 50%; 
+                        background-color: #3498db; color: white; 
+                        display: flex; justify-content: center; align-items: center;
+                        font-weight: bold; font-size: 18px;">
+                                {{ user.username|first|upper }}
+                            </div>
+                        </a>
+                    </div>
+
+                    {% else %}
+                    <a href="{% url 'login' %}" class="redirect-btn">Sign In</a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </header>
+
+
+    <!-- Destination Hero Section -->
+    <section class="destination-hero" style="background-image: url('{{baseUrl}}/Gateway.jpg');">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="hero-content text-center">
+                <h1>Mumbai Gateway</h1>
+                <div class="destination-meta">
+                    <span><i class="fas fa-map-marker-alt"></i> Mumbai, Maharashtra</span>
+                    <span><i class="fas fa-clock"></i> 3 Days 2 Nights</span>
+                    <span><i class="fas fa-star"></i> 9.4 Rating</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Info Section -->
+    <section class="quick-info py-4">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3">
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <h4>Best Time to Visit</h4>
+                        <p>October to March</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-item">
+                        <i class="fas fa-temperature-high"></i>
+                        <h4>Temperature</h4>
+                        <p>22°C - 33°C</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-item">
+                        <i class="fas fa-language"></i>
+                        <h4>Languages</h4>
+                        <p>Marathi, Hindi</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-item">
+                        <i class="fas fa-rupee-sign"></i>
+                        <h4>Starting From</h4>
+                        <p>₹25,999</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview Section -->
+    <section class="destination-overview py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="overview-content">
+                        <h2>About Mumbai</h2>
+                        <p class="lead">Mumbai, the financial capital of India, is a city of dreams, glamour, and
+                            endless opportunities. From historic architecture to Bollywood, from street food to luxury
+                            dining, Mumbai offers a unique blend of tradition and modernity.</p>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Weather Widget -->
+                    <div class="weather-widget mt-4">
+                        <h3>Weather</h3>
+                        <div class="weather-info">
+                            <i class="fas fa-cloud"></i>
+                            <span class="temperature">31°C</span>
+                            <span class="condition">Humid</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Local Cuisine Section -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="local-cuisine">
+                        <h2 class="text-center mb-4">Local Delicacies</h2>
+                        <div class="cuisine-grid">
+                            <div class="cuisine-column">
+                                <h3>Street Food Favorites</h3>
+                                <ul class="cuisine-list">
+                                    <li><i class="fas fa-utensils"></i> <strong>Vada Pav:</strong> Mumbai's favorite
+                                        snack</li>
+                                    <li><i class="fas fa-utensils"></i> <strong>Pav Bhaji:</strong> Spiced vegetable
+                                        curry</li>
+                                    <li><i class="fas fa-utensils"></i> <strong>Bhel Puri:</strong> Puffed rice snack
+                                    </li>
+                                    <li><i class="fas fa-utensils"></i> <strong>Mumbai Sandwich:</strong> Grilled
+                                        vegetable sandwich</li>
+                                </ul>
+                            </div>
+                            <div class="cuisine-column">
+                                <h3>Local Specialties</h3>
+                                <ul class="cuisine-list">
+                                    <li><i class="fas fa-utensils"></i> <strong>Bombay Duck:</strong> Crispy fish fry
+                                    </li>
+                                    <li><i class="fas fa-utensils"></i> <strong>Malvani Fish Curry:</strong> Coastal
+                                        curry</li>
+                                    <li><i class="fas fa-utensils"></i> <strong>Misal Pav:</strong> Spicy sprouts curry
+                                    </li>
+                                    <li><i class="fas fa-utensils"></i> <strong>Modak:</strong> Sweet dumpling</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Location</h2>
+            <div class="map-container">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d241317.11609823277!2d72.74109995644226!3d19.08219783958221!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c6306644edc1%3A0x5da4ed8f8d648c69!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1655431201145!5m2!1sen!2sin"
+                    width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Accommodation & Dining Section -->
+    <!--<section class="stay-dine-section py-5">
+        <div class="container">
+            <h2 class="text-center mb-5">Where to Stay & Dine</h2>-->
+    <!-- Luxury Hotels -->
+    <!--<h3 class="section-subtitle mb-4">Luxury Hotels</h3>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="hotel-card">
+                        <h4>The Taj Mahal Palace</h4>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="price">₹30,000/night</p>
+                        <div class="hotel-details">
+                            <p><i class="fas fa-map-marker-alt"></i> Apollo Bunder</p>
+                            <p><i class="fas fa-water"></i> Sea View</p>
+                            <p><i class="fas fa-crown"></i> Heritage Property</p>
+                        </div>
+                        <a href="https://www.tajhotels.com/en-in/taj/the-taj-mahal-palace-mumbai/"
+                            class="btn btn-primary mt-3 w-100" target="_blank">Book Now</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="hotel-card">
+                        <h4>The Oberoi Mumbai</h4>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="price">₹28,000/night</p>
+                        <div class="hotel-details">
+                            <p><i class="fas fa-map-marker-alt"></i> Nariman Point</p>
+                            <p><i class="fas fa-spa"></i> Luxury Spa</p>
+                            <p><i class="fas fa-utensils"></i> Fine Dining</p>
+                        </div>
+                        <a href="https://www.oberoihotels.com/hotels-in-mumbai/" class="btn btn-primary mt-3 w-100"
+                            target="_blank">Book Now</a>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="hotel-card">
+                        <h4>Trident Nariman Point</h4>
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="price">₹25,000/night</p>
+                        <div class="hotel-details">
+                            <p><i class="fas fa-map-marker-alt"></i> Nariman Point</p>
+                            <p><i class="fas fa-city"></i> City View</p>
+                            <p><i class="fas fa-swimming-pool"></i> Rooftop Pool</p>
+                        </div>
+                        <a href="https://www.tridenthotels.com/hotels-in-mumbai-nariman-point"
+                            class="btn btn-primary mt-3 w-100" target="_blank">Book Now</a>
+                    </div>
+                </div>
+            </div>-->
+
+
+    <!-- Must-Visit Places -->
+    <!--<h3 class="section-subtitle mt-5 mb-4">Must-Visit Places</h3>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="place-card">
+
+                        <div class="place-content">
+                            <h4>Gateway of India</h4>
+                            <p>Historic arch monument built in the 20th century, symbol of Mumbai.</p>
+                            <div class="place-details">
+                                <span><i class="fas fa-clock"></i> 1-2 hours</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Apollo Bunder</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="place-card">
+
+                        <div class="place-content">
+                            <h4>Marine Drive</h4>
+                            <p>3.6-kilometer-long boulevard known as the Queen's Necklace at night.</p>
+                            <div class="place-details">
+                                <span><i class="fas fa-clock"></i> 2-3 hours</span>
+                                <span><i class="fas fa-map-marker-alt"></i> South Mumbai</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-4">
+                    <div class="place-card">
+
+                        <div class="place-content">
+                            <h4>CSMT (Victoria Terminus)</h4>
+                            <p>UNESCO World Heritage site, historic railway station and architectural marvel.</p>
+                            <div class="place-details">
+                                <span><i class="fas fa-clock"></i> 1-2 hours</span>
+                                <span><i class="fas fa-map-marker-alt"></i> Fort Area</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>-->
+
+    <!-- Replace the transportation section with booking categories -->
+    <section class="booking-categories py-5">
+        <div class="container">
+            <div class="section-title text-center mb-5">
+                <h2>Book Your Mumbai Tour</h2>
+                <p>Choose your travel options</p>
+            </div>
+            <!-- Package Cards -->
+            <div class="row">
+                <!-- Premium Package -->
+                <div class="col-md-4">
+                    <div class="card-base package-card premium">
+                        <div class="package-header">
+                            <h3>Premium</h3>
+                            <p class="transport-type"><i class="fas fa-plane"></i> Flight Travel</p>
+                        </div>
+                        <div class="package-features">
+                            <ul>
+                                <li><i class="fas fa-check"></i> Luxury Flight Travel</li>
+                                <li><i class="fas fa-check"></i> 5-Star Hotel Accommodation</li>
+                                <li><i class="fas fa-check"></i> Private Tour Guide</li>
+                                <li><i class="fas fa-check"></i> All Meals Included</li>
+                                <li><i class="fas fa-check"></i> Priority Access to Attractions</li>
+                            </ul>
+                        </div>
+
+                        <button onclick="showBookingForm('premium')" class="btn-book">Book Premium</button>
+                    </div>
+                </div>
+
+                <!-- Gold Package -->
+                <div class="col-md-4">
+                    <div class="card-base package-card gold">
+                        <div class="package-header">
+                            <h3>Gold</h3>
+                            <p class="transport-type"><i class="fas fa-bus"></i> Bus Travel</p>
+                        </div>
+                        <div class="package-features">
+                            <ul>
+                                <li><i class="fas fa-check"></i> AC Bus Travel</li>
+                                <li><i class="fas fa-check"></i> 4-Star Hotel Accommodation</li>
+                                <li><i class="fas fa-check"></i> Group Tour Guide</li>
+                                <li><i class="fas fa-check"></i> Breakfast & Dinner</li>
+                                <li><i class="fas fa-check"></i> Standard Access to Attractions</li>
+                            </ul>
+                        </div>
+
+                        <button onclick="showBookingForm('gold')" class="btn-book">Book Gold</button>
+                    </div>
+                </div>
+
+                <!-- Silver Package -->
+                <div class="col-md-4">
+                    <div class="card-base package-card silver">
+                        <div class="package-header">
+                            <h3>Silver</h3>
+                            <p class="transport-type"><i class="fas fa-train"></i> Train Travel</p>
+                        </div>
+                        <div class="package-features">
+                            <ul>
+                                <li><i class="fas fa-check"></i> Train Travel (AC Class)</li>
+                                <li><i class="fas fa-check"></i> 3-Star Hotel Accommodation</li>
+                                <li><i class="fas fa-check"></i> Group Tour Guide</li>
+                                <li><i class="fas fa-check"></i> Breakfast Only</li>
+                                <li><i class="fas fa-check"></i> Standard Access to Attractions</li>
+                            </ul>
+                        </div>
+
+                        <button onclick="showBookingForm('silver')" class="btn-book">Book Silver</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Booking Details Section -->
+    <section id="bookingDetails" class="booking-details py-5" style="display: none;">
+        <div class="container">
+            <!-- Main Booking Form Container -->
+            <div class="booking-form-container">
+                <h2>Complete Your Booking</h2>
+                <div id="package-details" class="mb-4">
+                    <!-- Package details will be inserted here -->
+                </div>
+
+                <!-- Flight Search Section -->
+                <div class="flight-section">
+                    <div class="flight-header mb-4">
+                        <button class="btn btn-outline-primary flight-type active" data-type="oneway">One Way</button>
+                        <button class="btn btn-outline-primary flight-type" data-type="round">Round Trip</button>
+                    </div>
+                    <div class="flight-box">
+                        <div class="flight-inputs">
+                            <div class="form-group">
+                                <label for="fromCity">From City</label>
+                                <select class="form-control" id="fromCity" required>
+                                    <option value="">Select Departure City</option>
+                                    <option value="delhi">Delhi</option>
+                                    <option value="mumbai">Mumbai</option>
+                                    <option value="bangalore">Bangalore</option>
+                                    <option value="chennai">Chennai</option>
+                                    <option value="kolkata">Kolkata</option>
+                                    <option value="hyderabad">Hyderabad</option>
+                                    <option value="ahmedabad">Ahmedabad</option>
+                                    <option value="pune">Pune</option>
+                                    <option value="srinagar">Srinagar</option>
+                                    <option value="nagpur">Nagpur</option>
+                                    <option value="varanasi">Varanasi</option>
+                                    <option value="kanpur">Kanpur</option>
+                                    <option value="coimbatore">Coimbatore</option>
+                                    <option value="madurai">Madurai</option>
+                                    <option value="visakhapatnam">Visakhapatnam</option>
+                                    <option value="vijayawada">Vijayawada</option>
+                                    <option value="surat">Surat</option>
+                                    <option value="vadodara">Vadodara</option>
+                                    <option value="indore">Indore</option>
+                                    <option value="gwalior">Gwalior</option>
+                                    <option value="amritsar">Amritsar</option>
+                                    <option value="ludhiana">Ludhiana</option>
+                                    <option value="kochi">Kochi</option>
+                                    <option value="kozhikode">Kozhikode</option>
+                                    <option value="nashik">Nashik</option>
+                                    <option value="aurangabad">Aurangabad</option>
+                                    <option value="mangalore">Mangalore</option>
+                                    <option value="mysore">Mysore</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="toCity">To</label>
+                                <input type="text" class="form-control" id="toCityInput" value="Mumbai" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="departDate">Departure Date</label>
+                                <input type="date" class="form-control" id="departDate" required>
+                            </div>
+                            <div class="form-group return-date">
+                                <label for="returnDate">Return Date</label>
+                                <input type="date" class="form-control" id="returnDate">
+                            </div>
+                            <div class="form-group">
+                                <label for="transportPassengers">Passengers</label>
+                                <select class="form-control" id="transportPassengers">
+                                    <option value="1">1 Passenger</option>
+                                    <option value="2">2 Passengers</option>
+                                    <option value="3">3 Passengers</option>
+                                    <option value="4">4 Passengers</option>
+                                    <option value="5">5 Passengers</option>
+                                    <option value="6">6 Passengers</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flight-search">
+                            <button class="search-btn" id="searchFlights">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Available Flights Section -->
+                <div id="searchResults" class="flight-results" style="display: none;">
+                    <h3>Available Flights</h3>
+                    <div class="flight-result-card">
+                        <div class="airline-info">
+                            <img src="" alt="Airline" class="airline-logo">
+                            <span class="airline-name">IndiGo</span>
+                        </div>
+                        <div class="flight-time">
+                            <div class="departure">
+                                <span class="time">06:00</span>
+                                <span class="city">Delhi</span>
+                            </div>
+                            <div class="flight-duration">
+                                <div class="line"></div>
+                                <span class="duration">2h 30m</span>
+                            </div>
+                            <div class="arrival">
+                                <span class="time">08:30</span>
+                                <span class="city">Mumbai</span>
+                            </div>
+                        </div>
+                        <div class="flight-price">
+                            <span class="price">₹4,500</span>
+                            <button class="select-flight">Select</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hotels Section -->
+                <div id="packageHotels" class="hotels-section mb-4" style="display: none;">
+                    <div class="container">
+                        <h2>Select Your Hotel</h2>
+                        <div id="hotelsList" class="hotels-container">
+                            <!-- Hotels will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Meal Selection Section -->
+                <div id="mealSelection" class="meal-selection-section mb-4">
+                    <div class="container">
+                        <h2>Included Meals</h2>
+                        <p class="selection-note mb-3"><i class="fas fa-info-circle"></i> Please select one option for
+                            each included meal (maximum one selection per meal type)</p>
+
+                        <!-- Premium Package Meals -->
+                        <div id="premiumMeals" class="package-meals" style="display: none;">
+                            <div class="package-note mb-4">
+                                <i class="fas fa-star text-warning"></i> Premium Package includes all meals
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-4">
+                                    <div class="meal-card">
+                                        <div class="meal-header">
+                                            <i class="fas fa-sun"></i>
+                                            <h4>Breakfast</h4>
+                                        </div>
+                                        <div class="meal-items" data-meal-type="premium-breakfast">
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="premium-breakfast1"
+                                                    value="Continental Breakfast">
+                                                <label for="premium-breakfast1">Continental Breakfast</label>
+                                            </div>
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="premium-breakfast2"
+                                                    value="Indian Breakfast">
+                                                <label for="premium-breakfast2">Indian Breakfast</label>
+                                            </div>
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="premium-breakfast3"
+                                                    value="Healthy Breakfast">
+                                                <label for="premium-breakfast3">Healthy Options</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <div class="meal-card">
+                                        <div class="meal-header">
+                                            <i class="fas fa-utensils"></i>
+                                            <h4>Lunch</h4>
+                                        </div>
+                                        <div class="meal-items" data-meal-type="premium-lunch">
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="premium-lunch1"
+                                                    value="North Indian Thali">
+                                                <label for="premium-lunch1">North Indian Thali</label>
+                                            </div>
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="premium-lunch2"
+                                                    value="International Cuisine">
+                                                <label for="premium-lunch2">International Cuisine</label>
+                                            </div>
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="premium-lunch3"
+                                                    value="Local Specialties">
+                                                <label for="premium-lunch3">Local Specialties</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-4">
+                                    <div class="meal-card">
+                                        <div class="meal-header">
+                                            <i class="fas fa-moon"></i>
+                                            <h4>Dinner</h4>
+                                        </div>
+                                        <div class="meal-items" data-meal-type="premium-dinner">
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="premium-dinner1"
+                                                    value="Mughlai Dinner">
+                                                <label for="premium-dinner1">Mughlai Dinner</label>
+                                            </div>
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="premium-dinner2"
+                                                    value="BBQ & Grills">
+                                                <label for="premium-dinner2">BBQ & Grills</label>
+                                            </div>
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="premium-dinner3"
+                                                    value="Fine Dining">
+                                                <label for="premium-dinner3">Fine Dining</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gold Package Meals -->
+                        <div id="goldMeals" class="package-meals" style="display: none;">
+                            <div class="package-note mb-4">
+                                <i class="fas fa-star text-warning"></i> Gold Package includes breakfast and dinner
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <div class="meal-card">
+                                        <div class="meal-header">
+                                            <i class="fas fa-sun"></i>
+                                            <h4>Breakfast</h4>
+                                        </div>
+                                        <div class="meal-items" data-meal-type="gold-breakfast">
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="gold-breakfast1"
+                                                    value="Continental Breakfast">
+                                                <label for="gold-breakfast1">Continental Breakfast</label>
+                                            </div>
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="gold-breakfast2"
+                                                    value="Indian Breakfast">
+                                                <label for="gold-breakfast2">Indian Breakfast</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <div class="meal-card">
+                                        <div class="meal-header">
+                                            <i class="fas fa-moon"></i>
+                                            <h4>Dinner</h4>
+                                        </div>
+                                        <div class="meal-items" data-meal-type="gold-dinner">
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="gold-dinner1"
+                                                    value="North Indian Dinner">
+                                                <label for="gold-dinner1">North Indian Dinner</label>
+                                            </div>
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="gold-dinner2"
+                                                    value="International Cuisine">
+                                                <label for="gold-dinner2">International Cuisine</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Silver Package Meals -->
+                        <div id="silverMeals" class="package-meals" style="display: none;">
+                            <div class="package-note mb-4">
+                                <i class="fas fa-star text-warning"></i> Silver Package includes breakfast only
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 mb-4">
+                                    <div class="meal-card">
+                                        <div class="meal-header">
+                                            <i class="fas fa-sun"></i>
+                                            <h4>Breakfast</h4>
+                                        </div>
+                                        <div class="meal-items" data-meal-type="silver-breakfast">
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="silver-breakfast1"
+                                                    value="Continental Breakfast">
+                                                <label for="silver-breakfast1">Continental Breakfast</label>
+                                            </div>
+                                            <div class="meal-item">
+                                                <input type="checkbox" class="meal-checkbox" id="silver-breakfast2"
+                                                    value="Tea & Coffee">
+                                                <label for="silver-breakfast2">Tea & Coffee</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tourist Places Section -->
+                <div id="touristPlacesSection" class="tourist-places-section mb-4" style="display: none;">
+                    <div class="container">
+                        <h2>Included Tourist Attractions</h2>
+                        <p class="selection-note mb-3"><i class="fas fa-info-circle"></i> Explore the magnificent
+                            attractions included in your package</p>
+
+                        <!-- Premium Package Places -->
+                        <div id="premiumPlaces" class="package-places" style="display: none;">
+                            <div class="package-note mb-4"
+                                style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+                                <i class="fas fa-star text-warning"></i>
+                                Premium Package includes private guided tours to all attractions with luxury
+                                transportation and skip-the-line access
+                                <p class="mt-2 mb-0"><strong>Select any 4 attractions to visit</strong></p>
+                            </div>
+                            <div class="places-grid">
+                                <div class="row">
+                                    <div class="col-md-4 mb-4">
+                                        <div class="place-card selectable-place">
+                                            <input type="checkbox" class="place-checkbox premium-place"
+                                                style="position: absolute; top: 15px; right: 15px; width: 20px; height: 20px;">
+                                            <div class="place-header">
+                                                <i class="fas fa-monument"></i>
+                                                <h4>Gateway of India</h4>
+                                            </div>
+                                            <div class="place-details">
+                                                <p class="mb-2">A historical landmark and a popular tourist attraction,
+                                                    offering scenic views of the Arabian Sea and a glimse into Mumbai's
+                                                    rich historry</p>
+                                                <ul class="features-list">
+                                                    <li><i class="fas fa-map-marker-alt"></i> Distance: 25km from Mumbai
+                                                        International Airport</li>
+                                                    <li><i class="fas fa-clock"></i> Duration: 45 min-1 hour</li>
+                                                    <li><i class="fas fa-user-tie"></i> Private Guide & Skip-the-line
+                                                        Access</li>
+                                                    <li><i class="fas fa-car"></i> Luxury Car Transfer</li>
+                                                    <li><i class="fas fa-camera"></i> Professional Photography</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="place-card selectable-place">
+                                            <input type="checkbox" class="place-checkbox premium-place"
+                                                style="position: absolute; top: 15px; right: 15px; width: 20px; height: 20px;">
+                                            <div class="place-header">
+                                                <i class="fas fa-landmark"></i>
+                                                <h4>Elephanta Caves</h4>
+                                            </div>
+                                            <div class="place-details">
+                                                <p class="mb-2">Island with an ornately sculpted, 7th-century cave
+                                                    temple dedicated to the Hindu god Shiva.
+                                                </p>
+                                                <ul class="features-list">
+                                                    <li><i class="fas fa-map-marker-alt"></i> Distance: 25km from Mumbai
+                                                        International Airport</li>
+                                                    <li><i class="fas fa-clock"></i> Duration: about 1 hour</li>
+                                                    <li><i class="fas fa-user-tie"></i> Private Guide & VIP Access</li>
+                                                    <li><i class="fas fa-car"></i> Luxury Car with Refreshments</li>
+                                                    <li><i class="fas fa-camera"></i> Professional Photography</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="place-card selectable-place">
+                                            <input type="checkbox" class="place-checkbox premium-place"
+                                                style="position: absolute; top: 15px; right: 15px; width: 20px; height: 20px;">
+                                            <div class="place-header">
+                                                <i class="fas fa-mosque"></i>
+                                                <h4>Pali Hill</h4>
+                                            </div>
+                                            <div class="place-details">
+                                                <p class="mb-2">These are upscale areas known for their luxury
+                                                    residences, trendy shops, and vibrant nightlife.</p>
+                                                <ul class="features-list">
+                                                    <li><i class="fas fa-map-marker-alt"></i> Distance: 10-15 kilometers
+                                                        from Mumbai International Airport</li>
+                                                    <li><i class="fas fa-clock"></i> Duration: 30-45 Minutes</li>
+                                                    <li><i class="fas fa-user-tie"></i> Expert Guide & Priority Entry
+                                                    </li>
+                                                    <li><i class="fas fa-car"></i> Luxury Car Transfer</li>
+                                                    <li><i class="fas fa-moon"></i> Evening Access Available</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-md-4 mb-4">
+                                        <div class="place-card selectable-place">
+                                            <input type="checkbox" class="place-checkbox premium-place"
+                                                style="position: absolute; top: 15px; right: 15px; width: 20px; height: 20px;">
+                                            <div class="place-header">
+                                                <i class="fas fa-tree"></i>
+                                                <h4>Bandra West</h4>
+                                            </div>
+                                            <div class="place-details">
+                                                <p class="mb-2">These are upscale areas known for their luxury
+                                                    residences, trendy shops, and vibrant nightlife</p>
+                                                <ul class="features-list">
+                                                    <li><i class="fas fa-map-marker-alt"></i> Distance: 12-18 km from
+                                                        Mumbai International Airport</li>
+                                                    <li><i class="fas fa-clock"></i> Duration: 45 Minutes</li>
+                                                    <li><i class="fas fa-camera"></i> Professional Photography</li>
+                                                    <li><i class="fas fa-moon"></i> Special Evening Tour</li>
+                                                    <li><i class="fas fa-car"></i> Luxury Car Transfer</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="place-card selectable-place">
+                                            <input type="checkbox" class="place-checkbox premium-place"
+                                                style="position: absolute; top: 15px; right: 15px; width: 20px; height: 20px;">
+                                            <div class="place-header">
+                                                <i class="fas fa-gopuram"></i>
+                                                <h4>Siddhivinayak Temple</h4>
+                                            </div>
+                                            <div class="place-details">
+                                                <p class="mb-2">A famous Hindu temple dedicated to Lord Ganesha, known
+                                                    for its religious significance and vibrant atmosphere.</p>
+                                                <ul class="features-list">
+                                                    <li><i class="fas fa-map-marker-alt"></i> Distance: 15-20 km from
+                                                        Mumbai International Airport</li>
+                                                    <li><i class="fas fa-clock"></i> Duration: 30 Minutes</li>
+                                                    <li><i class="fas fa-user-tie"></i> Expert Guide</li>
+                                                    <li><i class="fas fa-car"></i> Luxury Car Transfer</li>
+                                                    <li><i class="fas fa-hands"></i> Marble Work Demo</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="place-card selectable-place">
+                                            <input type="checkbox" class="place-checkbox premium-place"
+                                                style="position: absolute; top: 15px; right: 15px; width: 20px; height: 20px;">
+                                            <div class="place-header">
+                                                <i class="fas fa-store-alt"></i>
+                                                <h4>Jehangir Art Gallery</h4>
+                                            </div>
+                                            <div class="place-details">
+                                                <p class="mb-2"> A prestigious art gallery showcasing both past and
+                                                    contemporary Indian art.
+                                                </p>
+                                                <ul class="features-list">
+                                                    <li><i class="fas fa-map-marker-alt"></i> Distance: 24km from Mumbai
+                                                        International Airport</li>
+                                                    <li><i class="fas fa-clock"></i> Duration: 27 Minutes</li>
+                                                    <li><i class="fas fa-user"></i> Personal Shopping Assistant</li>
+                                                    <li><i class="fas fa-car"></i> Luxury Car Drop & Pickup</li>
+                                                    <li><i class="fas fa-hand-holding-usd"></i> Bargaining Assistance
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gold Package Places -->
+                        <div id="goldPlaces" class="package-places" style="display: none;">
+                            <div class="package-note mb-4"
+                                style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffd700;">
+                                <i class="fas fa-medal text-warning"></i>
+                                Gold Package includes guided group tours to selected attractions with AC bus
+                                transportation
+                                <p class="mt-2 mb-0"><strong>Select any 2 attractions to visit</strong></p>
+                            </div>
+                            <div class="places-grid">
+                                <div class="row">
+                                    <div class="col-md-4 mb-4">
+                                        <div class="place-card selectable-place">
+                                            <input type="checkbox" class="place-checkbox gold-place"
+                                                style="position: absolute; top: 15px; right: 15px; width: 20px; height: 20px;">
+                                            <div class="place-header">
+                                                <i class="fas fa-monument"></i>
+                                                <h4>Gateway of India</h4>
+                                            </div>
+                                            <div class="place-details">
+                                                <p class="mb-2">A historical landmark and a popular tourist attraction,
+                                                    offering scenic views of the Arabian Sea and a glimse into Mumbai's
+                                                    rich historry</p>
+                                                <ul class="features-list">
+                                                    <li><i class="fas fa-map-marker-alt"></i> Distance: 25km from Mumbai
+                                                        International Airport</li>
+                                                    <li><i class="fas fa-clock"></i> Duration: 45 min-1 hour</li>
+                                                    <li><i class="fas fa-user-tie"></i> Private Guide & Skip-the-line
+                                                        Access</li>
+                                                    <li><i class="fas fa-car"></i> Luxury Car Transfer</li>
+                                                    <li><i class="fas fa-camera"></i> Professional Photography</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="place-card selectable-place">
+                                            <input type="checkbox" class="place-checkbox gold-place"
+                                                style="position: absolute; top: 15px; right: 15px; width: 20px; height: 20px;">
+                                            <div class="place-header">
+                                                <i class="fas fa-landmark"></i>
+                                                <h4>Elephanta Caves</h4>
+                                            </div>
+                                            <div class="place-details">
+                                                <p class="mb-2">Island with an ornately sculpted, 7th-century cave
+                                                    temple dedicated to the Hindu god Shiva.
+                                                </p>
+                                                <ul class="features-list">
+                                                    <li><i class="fas fa-map-marker-alt"></i> Distance: 25km from Mumbai
+                                                        International Airport</li>
+                                                    <li><i class="fas fa-clock"></i> Duration: about 1 hour</li>
+                                                    <li><i class="fas fa-user-tie"></i> Private Guide & VIP Access</li>
+                                                    <li><i class="fas fa-car"></i> Luxury Car with Refreshments</li>
+                                                    <li><i class="fas fa-camera"></i> Professional Photography</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="place-card selectable-place">
+                                            <input type="checkbox" class="place-checkbox gold-place"
+                                                style="position: absolute; top: 15px; right: 15px; width: 20px; height: 20px;">
+                                            <div class="place-header">
+                                                <h4>Pali Hill</h4>
+                                            </div>
+                                            <div class="place-details">
+                                                <p class="mb-2">These are upscale areas known for their luxury
+                                                    residences, trendy shops, and vibrant nightlife.</p>
+                                                <ul class="features-list">
+                                                    <li><i class="fas fa-map-marker-alt"></i> Distance: 10-15 kilometers
+                                                        from Mumbai International Airport</li>
+                                                    <li><i class="fas fa-clock"></i> Duration: 30-45 Minutes</li>
+                                                    <li><i class="fas fa-user-tie"></i> Expert Guide & Priority Entry
+                                                    </li>
+                                                    <li><i class="fas fa-car"></i> Luxury Car Transfer</li>
+                                                    <li><i class="fas fa-moon"></i> Evening Access Available</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Silver Package Places -->
+                        <div id="silverPlaces" class="package-places" style="display: none;">
+                            <div class="package-note mb-4"
+                                style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #c0c0c0;">
+                                <i class="fas fa-info-circle text-secondary"></i>
+                                Silver Package includes basic guided tours to nearby attractions
+                                <p class="mt-2 mb-0"><strong>Select 1 attraction to visit</strong></p>
+                            </div>
+                            <div class="places-grid">
+                                <div class="row">
+                                    <div class="col-md-4 mb-4">
+                                        <div class="place-card selectable-place">
+                                            <input type="checkbox" class="place-checkbox silver-place"
+                                                style="position: absolute; top: 15px; right: 15px; width: 20px; height: 20px;">
+                                            <div class="place-header">
+                                                <i class="fas fa-monument"></i>
+                                                <h4>Gateway of India</h4>
+                                            </div>
+                                            <div class="place-details">
+                                                <p class="mb-2">A historical landmark and a popular tourist attraction,
+                                                    offering scenic views of the Arabian Sea and a glimse into Mumbai's
+                                                    rich historry</p>
+                                                <ul class="features-list">
+                                                    <li><i class="fas fa-map-marker-alt"></i> Distance: 25km from Mumbai
+                                                        International Airport</li>
+                                                    <li><i class="fas fa-clock"></i> Duration: 45 min-1 hour</li>
+                                                    <li><i class="fas fa-user-tie"></i> Private Guide & Skip-the-line
+                                                        Access</li>
+                                                    <li><i class="fas fa-car"></i> Luxury Car Transfer</li>
+                                                    <li><i class="fas fa-camera"></i> Professional Photography</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-4">
+                                        <div class="place-card selectable-place">
+                                            <input type="checkbox" class="place-checkbox silver-place"
+                                                style="position: absolute; top: 15px; right: 15px; width: 20px; height: 20px;">
+                                            <div class="place-header">
+                                                <i class="fas fa-landmark"></i>
+                                                <h4>Elephanta Caves</h4>
+                                            </div>
+                                            <div class="place-details">
+                                                <p class="mb-2">Island with an ornately sculpted, 7th-century cave
+                                                    temple dedicated to the Hindu god Shiva.
+                                                </p>
+                                                <ul class="features-list">
+                                                    <li><i class="fas fa-map-marker-alt"></i> Distance: 25km from Mumbai
+                                                        International Airport</li>
+                                                    <li><i class="fas fa-clock"></i> Duration: about 1 hour</li>
+                                                    <li><i class="fas fa-user-tie"></i> Private Guide & VIP Access</li>
+                                                    <li><i class="fas fa-car"></i> Luxury Car with Refreshments</li>
+                                                    <li><i class="fas fa-camera"></i> Professional Photography</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Information Form -->
+                <div class="personal-info-section mb-4">
+                    <form id="bookingForm">
+                        <h3 class="mb-4">Personal Information</h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="firstName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" required>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="TravelDate">Travel Date</label>
+                                <input type="date" class="form-control" id="TravelDate" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="travelers" class="form-label">Number of Travelers</label>
+                                <input type="number" class="form-control" id="travelers" min="1" value="1" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="specialRequests" class="form-label">Special Requests</label>
+                            <textarea class="form-control" id="specialRequests" rows="3"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                    </form>
+                </div>
+
+                <!-- Booking Summary Section -->
+                <div class="booking-summary-section">
+                    <h3>Booking Summary</h3>
+                    <div class="booking-summary-content">
+                        <div id="summary-details">
+                            <!-- Summary details will be inserted here -->
+                        </div>
+                        <div class="summary-breakdown mt-4">
+                            <h4>Price Breakdown</h4>
+                            <div id="price-details">
+                                <!-- Price breakdown will be inserted here -->
+                            </div>
+                        </div>
+                        <div class="booking-notes mt-4">
+                            <h4>Important Notes</h4>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-info-circle text-primary"></i> Free cancellation up to 24 hours
+                                    before departure</li>
+                                <li><i class="fas fa-clock text-primary"></i> Check-in opens 3 hours before departure
+                                </li>
+                                <li><i class="fas fa-suitcase text-primary"></i> Baggage allowance included</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-bottom text-center mt-4">
+            <p>&copy; 2024 Travel_Amaze. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="{% static 'js/mumbai.js' %}"></script>
+
+</body>
+
+</html>

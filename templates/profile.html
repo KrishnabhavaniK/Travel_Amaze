@@ -1,0 +1,257 @@
+{% load static %}
+{% static "images" as baseUrl %}
+
+<style>
+    body {
+        background-image: url('{{baseUrl}}/register.avif');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    .profile-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+    }
+
+    .header-actions {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+
+    .btn-go-back {
+        background-color: red;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+    }
+
+    .btn-go-back:hover {
+        background-color: darkred;
+        color: white;
+    }
+
+    .profile-header {
+        background: linear-gradient(135deg, white, rgb(0, 128, 126));
+        border-radius: 15px;
+        padding: 30px;
+        margin: 20px 0;
+        color: black;
+    }
+
+    .profile-info {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .profile-details h2 {
+        margin: 0;
+        font-size: 2em;
+    }
+
+    .stats {
+        margin-top: 15px;
+        display: flex;
+        gap: 20px;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-value {
+        display: block;
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+    .stat-label {
+        font-size: 0.9em;
+        opacity: 0.9;
+    }
+
+    .destinations-section {
+        margin-top: 30px;
+    }
+
+    .destinations-section h3 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    .destinations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .destination-card {
+        background:linear-gradient(135deg, white, rgb(0, 128, 126));
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+        text-align: center;
+    }
+
+    .destination-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .destination-content {
+        padding: 15px;
+    }
+
+    .destination-content h4 {
+        color: #2c3e50;
+        margin: 0 0 10px 0;
+    }
+
+    .no-destinations {
+        text-align: center;
+        padding: 50px 0;
+        color: #7f8c8d;
+    }
+
+    .no-destinations i {
+        font-size: 3em;
+        margin-bottom: 15px;
+    }
+
+    .redirect-btn {
+        display: inline-block;
+        background-color: green;
+        color: white;
+        text-decoration: none;
+        /* Removes underline */
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 16px;
+        text-align: center;
+        transition: background 0.3s;
+    }
+
+    .redirect-btn:hover {
+        background-color: darkgreen;
+    }
+
+    .remove-btn {
+        display: inline-block;
+        background-color: red;
+        color: white;
+        text-decoration: none;
+        /* Removes underline */
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 16px;
+        text-align: center;
+        transition: background 0.3s;
+    }
+
+    .remove-btn:hover {
+        background-color: darkred;
+    }
+</style>
+
+
+
+<body>
+    {% block content %}
+    <!-- Go Back Button -->
+    <br>
+    <div class="header-actions">
+        <a href="{% url 'index' %}" class="btn-go-back">
+            <i class="fas fa-arrow-left"></i> Go Back
+        </a>
+    </div>
+    <br>
+    <div class="profile-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-info">
+                <div class="profile-details">
+                    <h2>Username: {{ user.username }}</h2><br>
+                    <h2>Email: {{ user.email }}</h2>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <h2 class="stat-label">Saved Places: {{ destinations|length }}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="destinations-section">
+        <h1 class="destination-card">Saved Destinations</h1>
+        {% if destinations %}
+        <div class="destinations-grid">
+            {% for destination in destinations %}
+            <div class="destination-card" id="destination-{{ destination.id }}">
+                <div class="destination-content">
+                    <h4>{{ destination.destination_name }}</h4>
+                    <a href="{{ destination.destination_url }}" class="redirect-btn">Visit Again</a>
+                    <button class="remove-btn" data-id="{{ destination.id }}">Remove</button>
+                </div>
+                <!--<li id="destination-{{ destination.id }}">
+                    <a href="{{ destination.destination_url }}">{{ destination.destination_name }}</a>
+                    <button class="remove-btn" data-id="{{ destination.id }}">Remove</button>
+                </li>-->
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="no-destinations">
+            <i class="fas fa-map-marked-alt"></i>
+            <p>No destinations saved yet</p>
+            <a href="{% url 'service' %}" class="redirect-btn">Discover Places</a>
+        </div>
+        {% endif %}
+    </div>
+    {% endblock %}
+
+    <script>
+        document.querySelectorAll(".remove-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                let destinationId = this.getAttribute("data-id");
+
+                fetch("{% url 'delete_destination' %}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRFToken": getCookie("csrftoken")  // CSRF token for security
+                    },
+                    body: `id=${destinationId}`
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === "success") {
+                            document.getElementById("destination-" + destinationId).remove();  // Remove from UI
+                        }
+                        alert(data.message);
+                    })
+                    .catch(error => console.error("Error:", error));
+            });
+        });
+
+        // Function to get CSRF token
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                document.cookie.split(';').forEach(cookie => {
+                    let trimmed = cookie.trim();
+                    if (trimmed.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(trimmed.substring(name.length + 1));
+                    }
+                });
+            }
+            return cookieValue;
+        }
+    </script>
+</body>

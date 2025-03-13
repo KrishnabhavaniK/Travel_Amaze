@@ -1,0 +1,246 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel_Amaze</title>
+
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        .redirect-btn {
+            display: inline-block;
+            background-color: red;
+            color: white;
+            text-decoration: none;
+            /* Removes underline */
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            text-align: center;
+            transition: background 0.3s;
+        }
+
+        .redirect-btn:hover {
+            background-color: darkred;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="site-header" style="background: rgba(0, 0, 0, 0.7) !important; padding: 20px 0;">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg">
+                <a class="navbar-brand" href="#">
+                    <img src="{% static 'images/logo.png' %}" alt="Travel_Amaze" class="logo-icon">
+                    Travel_Amaze
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link active" href="{% url 'index' %}">HOME</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">ABOUT</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'service' %}">SERVICES</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'contact' %}">CONTACT</a></li>
+                        <!--<li class="nav-item">
+                            <a class="nav-link register-btn" href="registration.html">REGISTER</a>
+                        </li>-->
+                    </ul>
+                    {% if user.is_authenticated %}
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <a href="{% url 'logout' %}" class="redirect-btn">Logout</a>
+                        <a href="{% url 'profile' %}" style="text-decoration: none;">
+                            <div style="width: 35px; height: 35px; border-radius: 50%; 
+                        background-color: #3498db; color: white; 
+                        display: flex; justify-content: center; align-items: center;
+                        font-weight: bold; font-size: 18px;">
+                                {{ user.username|first|upper }}
+                            </div>
+                        </a>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="redirect-btn">Login</a>
+                    {% endif %}
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-overlay"></div>
+        <div class="container">
+            <div class="hero-content text-center">
+                <h1>Let's Explore Your Awesome City</h1>
+                <p>Find great places to stay, eat, shop, or visit from local experts.</p>
+                <div class="search-section">
+                    <form id="searchForm" action="{% url 'service' %}" method="get">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="searchInput" name="search"
+                                placeholder="Search destinations..." list="destinationsList">
+                            <datalist id="destinationsList">
+                                <option value="Taj Mahal">
+                                <option value="Kerala Backwaters">
+                                <option value="Rajasthan">
+                                <option value="Goa">
+                                <option value="Araku">
+                                <option value="Mumbai">
+                                <option value="Hyderabad">
+                                <option value="Shimla">
+                                <option value="Sundarbans">
+                                <option value="Ooty">
+                                <option value="Mysore">
+                                <option value="Ladakh">
+                                <option value="Delhi">
+                                <option value="Darjeeling">
+                                <option value="Hampi">
+                            </datalist>
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search"></i> Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add this section after the hero section -->
+    <section class="features-section">
+        <div class="wave-divider">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none">
+                <path fill="#ffffff"
+                    d="M0,50 C150,100 350,0 500,50 C650,100 850,0 1000,50 C1150,100 1350,0 1440,50 L1440,100 L0,100 Z">
+                </path>
+            </svg>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <img src="{% static 'images/Screenshot 2025-02-19 075626.png' %}" alt="Best Price">
+                        </div>
+                        <h3>Best Price Guarantee</h3>
+                        <p>A small river named Duden flows by their place and supplies.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <img src="{% static 'images/Screenshot 2025-02-19 075748.png' %}" alt="Travellers Love">
+                        </div>
+                        <h3>Travellers Love Us</h3>
+                        <p>A small river named Duden flows by their place and supplies.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <img src="{% static 'images/Screenshot 2025-02-19 075825.png' %}" alt="Best Travel Agent">
+                        </div>
+                        <h3>Best Travel Agent</h3>
+                        <p>A small river named Duden flows by their place and supplies.</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="feature-box">
+                        <div class="feature-icon">
+                            <img src="{% static 'images/symbol.png' %}" alt="Our Dedicated Support">
+                        </div>
+                        <h3>Our Dedicated Support</h3>
+                        <p>A small river named Duden flows by their place and supplies.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!--<section class="featured-destinations">
+        <div class="container">
+            <div class="section-title text-center">
+                <span>Featured</span>
+                <h2>Featured Destinations</h2>
+            </div>
+            <div class="destination-wrapper">
+                <div class="destination-carousel">
+                    {% for destination in featured_destinations %}
+                    <div class="destination-item">
+                        <div class="destination-img">
+                            <img src="{{ destination.image }}" alt="{{ destination.name }}">
+                            <div class="price-tag">
+                                <span>{{ destination.listings }} listings</span>
+                            </div>
+                        </div>
+                        <div class="destination-content">
+                            <h3>{{ destination.name }}</h3>
+                            <p><i class="fas fa-map-marker-alt"></i> {{ destination.location }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>-->
+    <section class="featured-destinations">
+        <div class="container">
+            <div class="section-title text-center">
+                <span>Featured</span>
+                <h2>Featured Destinations</h2>
+            </div>
+            <div class="destination-wrapper">
+                <div class="destination-carousel">
+                    {% for destination in featured_destinations %}
+                    <div class="destination-item">
+                        <div class="destination-img">
+                            <img src="{{ destination.image_url.url }}" alt="{{ destination.name }}">
+                            <div class="price-tag">
+                                <span>{{ destination.listings }} listings</span>
+                            </div>
+                        </div>
+                        <div class="destination-content">
+                            <h3>{{ destination.name }}</h3>
+                            <p><i class="fas fa-map-marker-alt"></i> {{ destination.location }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p>No destinations available.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <footer class="site-footer">
+        <div class="footer-bottom text-center mt-4">
+            <p>&copy; 2024 Travel_Amaze. All rights reserved.</p>
+        </div>
+
+    </footer>
+
+
+    <!-- Scripts-->
+    <script src="{% static 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js' %}"></script>
+    <script
+        src="{% static 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>
